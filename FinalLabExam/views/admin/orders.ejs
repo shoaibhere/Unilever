@@ -1,0 +1,105 @@
+<div class="pagination mb-4">
+  <h4 class="me-5">Pages</h4>
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      <% if (hasPrevPage) { %>
+        <li class="page-item">
+          <a class="page-link" href="?page=<%= currentPage - 1 %>&limit=<%= limit %>" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+      <% } else { %>
+        <li class="page-item disabled">
+          <span class="page-link" aria-hidden="true">&laquo;</span>
+        </li>
+      <% } %>
+
+      <% for (let page = 1; page <= totalPages; page++) { %>
+        <li class="page-item <%= page === currentPage ? 'active' : '' %>">
+          <a class="page-link" href="?page=<%= page %>&limit=<%= limit %>"><%= page %></a>
+        </li>
+      <% } %>
+
+      <% if (hasNextPage) { %>
+        <li class="page-item">
+          <a class="page-link" href="?page=<%= currentPage + 1 %>&limit=<%= limit %>" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      <% } else { %>
+        <li class="page-item disabled">
+          <span class="page-link" aria-hidden="true">&raquo;</span>
+        </li>
+      <% } %>
+    </ul>
+  </nav>
+</div>
+<h3 class="mb-4"><%- pageTitle %></h3>
+
+<form action="/admin/orders" method="GET" class="d-flex form-inline my-2">
+  <input class="form-control mr-sm-2" type="search" placeholder="Search by customer name" aria-label="Search" name="search">
+  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+</form>
+
+<table class="table table-bordered">
+  <thead class="table-dark">
+    <tr>
+      <th>
+        <a class="text-light" href="?sortBy=_id&sortDirection=<%= sortBy === '_id' && sortDirection === 'asc' ? 'desc' : 'asc' %>&page=1&limit=<%= limit %>">
+          Order ID <%= sortBy === '_id' ? (sortDirection === 'asc' ? '▲' : '▼') : '' %>
+        </a>
+      </th>
+      <th>
+        <a class="text-light" href="?sortBy=customer.lastName&sortDirection=<%= sortBy === 'customer.lastName' && sortDirection === 'asc' ? 'desc' : 'asc' %>&page=1&limit=<%= limit %>">
+          Customer <%= sortBy === 'customer.lastName' ? (sortDirection === 'asc' ? '▲' : '▼') : '' %>
+        </a>
+      </th>
+      <th>
+        <a class="text-light" href="?sortBy=totalPrice&sortDirection=<%= sortBy === 'totalPrice' && sortDirection === 'asc' ? 'desc' : 'asc' %>&page=1&limit=<%= limit %>">
+          Total Price <%= sortBy === 'totalPrice' ? (sortDirection === 'asc' ? '▲' : '▼') : '' %>
+        </a>
+      </th>
+      <th>
+        <a class="text-light" href="?sortBy=orderStatus&sortDirection=<%= sortBy === 'orderStatus' && sortDirection === 'asc' ? 'desc' : 'asc' %>&page=1&limit=<%= limit %>">
+          Status <%= sortBy === 'orderStatus' ? (sortDirection === 'asc' ? '▲' : '▼') : '' %>
+        </a>
+      </th>
+      <th>
+        <a class="text-light" href="?sortBy=paymentMethod&sortDirection=<%= sortBy === 'paymentMethod' && sortDirection === 'asc' ? 'desc' : 'asc' %>&page=1&limit=<%= limit %>">
+          Payment Method <%= sortBy === 'paymentMethod' ? (sortDirection === 'asc' ? '▲' : '▼') : '' %>
+        </a>
+      </th>
+      <th>
+        <a class="text-light" href="?sortBy=orderDate&sortDirection=<%= sortBy === 'orderDate' && sortDirection === 'asc' ? 'desc' : 'asc' %>&page=1&limit=<%= limit %>">
+          Order Date <%= sortBy === 'orderDate' ? (sortDirection === 'asc' ? '▲' : '▼') : '' %>
+        </a>
+      </th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody> 
+    <% for (let index = 0; index < orders.length; index++) { %>
+      <tr>
+        <td><%= orders[index]._id %></td>
+        <td>
+          <%= orders[index].customer.firstName %> <%= orders[index].customer.lastName %><br>
+          <span class="text-muted"><%= orders[index].customer.email %></span>
+        </td>
+        <td><%= orders[index].totalPrice.toFixed(2) %> PKR</td>
+        <td>
+          <span class="badge <%= orders[index].orderStatus === 'Pending' ? 'bg-warning' : orders[index].orderStatus === 'Shipped' ? 'bg-info' : orders[index].orderStatus === 'Delivered' ? 'bg-success' : 'bg-danger' %>">
+            <%= orders[index].orderStatus %>
+          </span>
+        </td>
+        <td><%= orders[index].paymentMethod %></td>
+        <td><%= new Date(orders[index].orderDate).toLocaleDateString() %></td>
+        <td>
+          <a href="/admin/orders/view/<%= orders[index]._id %>" class="btn btn-info btn-sm">View</a>
+          <a href="/admin/orders/delete/<%= orders[index]._id %>" class="btn btn-danger btn-sm">Delete</a>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+
