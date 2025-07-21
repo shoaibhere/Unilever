@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "FinalLabExam/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "FinalLabExam/server.js"
+    }
+  ],
+  "env": {
+    "MONGODB_CONNECTION_STRING": "@mongodb_connection_string",
+    "SECRET": "@secret"
+  },
+  "functions": {
+    "FinalLabExam/server.js": {
+      "includeFiles": [
+        "FinalLabExam/views/**",
+        "FinalLabExam/public/**",
+        "FinalLabExam/routes/**",
+        "FinalLabExam/models/**",
+        "FinalLabExam/middlewares/**"
+      ]
+    }
+  }
+}
